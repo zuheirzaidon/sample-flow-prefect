@@ -1,0 +1,7 @@
+sample_id,species,collection_date,status
+S001,Felis catus,2025-01-10,pending
+S002,Canis lupus familiaris,2025-01-11,pending
+S003,Mus musculus,2025-01-12,pending
+S004,Homo sapiens,,pending
+S005,Danio rerio,2025-01-14,pending
+S006,Gallus gallus,2025-01-15,pending

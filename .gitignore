@@ -216,3 +216,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Output data
+data/output/*
+
+# Keep folder structure
+!data/output/.keep
+
+# Environment files
+.env

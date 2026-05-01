@@ -1,0 +1,6 @@
+sample_id,site,assay_type,priority
+S001,SiteA,RNA-seq,high
+S002,SiteB,WGS,medium
+S003,SiteA,ATAC-seq,high
+S005,SiteB,WGS,medium
+S006,,RNA-seq,low
