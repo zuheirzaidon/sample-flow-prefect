@@ -1,0 +1,5 @@
+site,processing_status,sample_count
+SiteA,ready,2
+SiteB,ready,2
+UNKNOWN,invalid_sample,1
+UNKNOWN,missing_metadata,1

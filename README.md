@@ -172,6 +172,13 @@ Run the pipeline with custom input/output paths:
 python -m src.flow --input data/raw --output data/output
 ```
 
+## Example output
+
+Example outputs from a sample run are provided in:
+
+
+`data/example_output/`
+
 ## Project structure
 
 ```text

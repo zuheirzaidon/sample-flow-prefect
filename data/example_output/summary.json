@@ -1,0 +1,10 @@
+{
+  "run_timestamp": "2026-05-01T08:47:00.389166+00:00",
+  "total_samples": 6,
+  "ready_samples": 4,
+  "invalid_samples": 1,
+  "invalid_metadata": 0,
+  "missing_metadata": 1,
+  "needs_attention": 4,
+  "high_priority_samples": 2
+}

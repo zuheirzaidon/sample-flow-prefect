@@ -1,0 +1,5 @@
+priority,needs_attention,sample_count
+UNKNOWN,True,1
+high,True,2
+low,True,1
+medium,False,2

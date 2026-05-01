@@ -1,0 +1,7 @@
+sample_id,event_type,processing_status,processed_at
+S001,sample_processed,ready,2026-05-01T08:47:00.352402+00:00
+S002,sample_processed,ready,2026-05-01T08:47:00.352402+00:00
+S003,sample_processed,ready,2026-05-01T08:47:00.352402+00:00
+S004,sample_processed,invalid_sample,2026-05-01T08:47:00.352402+00:00
+S005,sample_processed,ready,2026-05-01T08:47:00.352402+00:00
+S006,sample_processed,missing_metadata,2026-05-01T08:47:00.352402+00:00
