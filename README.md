@@ -47,7 +47,7 @@ Docker for reproducible local execution
 
 ## Inputs
 
-**samples.csv**
+`samples.csv`
 
 Contains core sample records such as:
 
@@ -56,7 +56,7 @@ Contains core sample records such as:
 - collection_date
 - status
 
-**metadata.csv**
+`metadata.csv`
 
 Contains sample-linked metadata such as:
 
@@ -69,15 +69,15 @@ Contains sample-linked metadata such as:
 
 The pipeline writes the following outputs to data/output/:
 
-**processed_samples.csv**
+`processed_samples.csv`
 
 Merged and validated sample records with derived processing status.
 
-**event_log.csv**
+`event_log.csv`
 
 Event-level log showing how each sample was processed.
 
-**summary.json**
+`summary.json`
 
 A compact summary of run statistics, including counts by processing status.
 
@@ -103,24 +103,18 @@ pip install -r requirements.txt
 
 ## Run the workflow:
 
-```
-python -m src.flow
-```
+`python -m src.flow`
 
 ## Testing
 
 Run tests with:
 
-```
-pytest
-```
+`pytest`
 
 ## Future improvements
 
 Planned extensions include:
 
-- stronger schema validation with Pydantic models
-- containerised execution with Docker
 - richer input validation and error handling
 - configurable data sources
 - CI for automated test execution
@@ -150,10 +144,10 @@ docker run --rm \
 
 In addition to validating and merging records, the workflow derives lightweight operational fields at run time, including:
 
-- `days_since_collection`
-- `is_high_priority`
-- `needs_attention`
-- `processing_bucket`
+- days_since_collection
+- is_high_priority
+- needs_attention
+- processing_bucket
 
 These fields are then aggregated into simple monitoring views to demonstrate how record-level data can be transformed into operational metrics.
 
