@@ -2,3 +2,5 @@ prefect>=2.14
 pandas>=2.0
 pydantic>=2.0
 pytest>=8.0
+fastapi
+uvicorn
