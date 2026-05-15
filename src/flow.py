@@ -1,5 +1,5 @@
 from __future__ import annotations
-
+from pathlib import Path
 from prefect import flow
 
 from src.tasks import (
@@ -8,8 +8,7 @@ from src.tasks import (
     build_event_log,
     build_summary,
     derive_runtime_fields,
-    load_metadata,
-    load_samples,
+    load_data,
     merge_records,
     validate_metadata,
     validate_samples,
@@ -21,8 +20,7 @@ import argparse
 
 @flow(name="sample-flow")
 def run_sample_flow(
-    samples_path: str = "data/raw/samples.csv",
-    metadata_path: str = "data/raw/metadata.csv",
+    input_dir: str = "data/raw",
     output_dir: str = "data/output",
 ) -> None:
     """
@@ -30,8 +28,15 @@ def run_sample_flow(
     load -> validate -> merge -> assign status -> derive runtime fields
     -> event log -> aggregates -> summary -> write outputs
     """
-    samples = load_samples(samples_path)
-    metadata = load_metadata(metadata_path)
+
+    input_path = Path(input_dir)
+    output_path = Path(output_dir)
+
+    samples_path = input_path / "samples.csv"
+    metadata_path = input_path / "metadata.csv"
+
+    samples = load_data(samples_path)
+    metadata = load_data(metadata_path)
 
     validated_samples = validate_samples(samples)
     validated_metadata = validate_metadata(metadata)
@@ -66,11 +71,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    samples_path = f"{args.input}/samples.csv"
-    metadata_path = f"{args.input}/metadata.csv"
-
     run_sample_flow(
-        samples_path=samples_path,
-        metadata_path=metadata_path,
+        input_dir = args.input,
         output_dir=args.output,
     )

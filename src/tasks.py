@@ -8,55 +8,42 @@ import pandas as pd
 from prefect import task
 from src.models import SampleRecord, MetadataRecord
 
-import math
-
-
 @task
-def load_samples(file_path: str) -> pd.DataFrame:
+def load_data(file_path: str) -> pd.DataFrame:
     """Load samples records from CSV"""
     df = pd.read_csv(file_path)
     return df
 
-
 @task
-def load_metadata(file_path: str) -> pd.DataFrame:
-    """Load metadata records from CSV"""
-    df = pd.read_csv(file_path)
-    return df
-
-
-@task
-def validate_samples(samples_df):
-    validated_rows = []
+def validate_samples(samples_df: pd.DataFrame) -> pd.DataFrame:
     validity_flags = []
 
-    for _, row in samples_df.iterrows():
+    def determine_validity(row: pd.Series) -> bool:
         try:
             SampleRecord(**row.to_dict())
-            validated_rows.append(row)
-            validity_flags.append(True)
+            return True
         except Exception:
-            validated_rows.append(row)
-            validity_flags.append(False)
+            return False
 
     result = samples_df.copy()
-    result["sample_valid"] = validity_flags
+    result["sample_valid"] = result.apply(determine_validity, axis = 1)
     return result
 
 
 @task
-def validate_metadata(metadata_df):
+def validate_metadata(metadata_df: pd.DataFrame) -> pd.DataFrame:
     validity_flags = []
 
-    for _, row in metadata_df.iterrows():
+    def determine_validity(row:pd.Series) -> bool:
+
         try:
             MetadataRecord(**row.to_dict())
-            validity_flags.append(True)
+            return True
         except Exception:
-            validity_flags.append(False)
+            return False
 
     result = metadata_df.copy()
-    result["metadata_valid"] = validity_flags
+    result["metadata_valid"] = result.apply(determine_validity, axis=1)
     return result
 
 
@@ -129,29 +116,6 @@ def build_summary(processed_df: pd.DataFrame) -> dict:
     }
     return summary
 
-
-@task
-def write_outputs(
-    processed_df: pd.DataFrame,
-    event_log_df: pd.DataFrame,
-    summary: dict,
-    aggregates: dict[str, pd.DataFrame],
-    output_dir: str,
-) -> None:
-    """Write processed data, event log, summary outputs, and aggregate views."""
-    output_path = Path(output_dir)
-    output_path.mkdir(parents=True, exist_ok=True)
-
-    processed_df.to_csv(output_path / "processed_samples.csv", index=False)
-    event_log_df.to_csv(output_path / "event_log.csv", index=False)
-
-    with open(output_path / "summary.json", "w", encoding="utf-8") as f:
-        json.dump(summary, f, indent=2)
-
-    for name, df in aggregates.items():
-        df.to_csv(output_path / f"{name}.csv", index=False)
-        
-
 ####RUNTIME FIELDS#######
 
 @task
@@ -173,7 +137,7 @@ def derive_runtime_fields(processed_df: pd.DataFrame) -> pd.DataFrame:
             return None
 
     derived["days_since_collection"] = derived["collection_date"].apply(parse_days_since_collection)
-    derived["is_high_priority"] = derived["priority"].fillna("").str.lower().eq("high")
+    derived["is_high_priority"] = derived["priority"].fillna("").str.strip().str.lower().eq("high")
 
     def determine_needs_attention(row: pd.Series) -> bool:
         if row["processing_status"] != "ready":
@@ -237,6 +201,30 @@ def build_aggregates(processed_df: pd.DataFrame) -> dict[str, pd.DataFrame]:
         "site_summary": site_summary,
         "priority_summary": priority_summary,
     }
+
+@task
+def write_outputs(
+    processed_df: pd.DataFrame,
+    event_log_df: pd.DataFrame,
+    summary: dict,
+    aggregates: dict[str, pd.DataFrame],
+    output_dir: str,
+) -> None:
+    """Write processed data, event log, summary outputs, and aggregate views."""
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    processed_df.to_csv(output_path / "processed_samples.csv", index=False)
+    event_log_df.to_csv(output_path / "event_log.csv", index=False)
+
+    with open(output_path / "summary.json", "w", encoding="utf-8") as f:
+        json.dump(summary, f, indent=2)
+
+    for name, df in aggregates.items():
+        df.to_csv(output_path / f"{name}.csv", index=False)
+        
+
+
 
 
 
